@@ -23,6 +23,9 @@ package com.google.zxing;
  */
 public enum BarcodeFormat {
 
+  /** Pharmacode format. */
+  PHARMA_CODE,
+
   /** Aztec 2D barcode format. */
   AZTEC,
 
