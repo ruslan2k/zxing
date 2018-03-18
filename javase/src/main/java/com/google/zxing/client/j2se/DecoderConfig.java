@@ -104,7 +104,8 @@ final class DecoderConfig {
             BarcodeFormat.AZTEC,
             BarcodeFormat.PDF_417,
             BarcodeFormat.CODABAR,
-            BarcodeFormat.MAXICODE
+            BarcodeFormat.MAXICODE,
+            BarcodeFormat.PHARMA_CODE
         ));
       }
     }

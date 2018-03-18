@@ -50,7 +50,8 @@ final class DecodeFormatManager {
                                     BarcodeFormat.CODE_93,
                                     BarcodeFormat.CODE_128,
                                     BarcodeFormat.ITF,
-                                    BarcodeFormat.CODABAR);
+                                    BarcodeFormat.CODABAR,
+                                    BarcodeFormat.PHARMA_CODE);
     ONE_D_FORMATS = EnumSet.copyOf(PRODUCT_FORMATS);
     ONE_D_FORMATS.addAll(INDUSTRIAL_FORMATS);
   }

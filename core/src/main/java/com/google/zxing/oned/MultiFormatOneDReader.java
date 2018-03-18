@@ -73,6 +73,9 @@ public final class MultiFormatOneDReader extends OneDReader {
       if (possibleFormats.contains(BarcodeFormat.RSS_EXPANDED)) {
         readers.add(new RSSExpandedReader());
       }
+      if (possibleFormats.contains(BarcodeFormat.PHARMA_CODE)) {
+        readers.add(new PharmaCodeReader());
+      }
     }
     if (readers.isEmpty()) {
       readers.add(new MultiFormatUPCEANReader(hints));
@@ -83,6 +86,7 @@ public final class MultiFormatOneDReader extends OneDReader {
       readers.add(new ITFReader());
       readers.add(new RSS14Reader());
       readers.add(new RSSExpandedReader());
+      readers.add(new PharmaCodeReader());
     }
     this.readers = readers.toArray(new OneDReader[readers.size()]);
   }
