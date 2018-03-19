@@ -28,12 +28,13 @@ import com.google.zxing.common.BitArray;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONArray;
-import org.json.JSONObject;
+//import com.mashape.unirest.http.HttpResponse;
+//import com.mashape.unirest.http.JsonNode;
+//import com.mashape.unirest.http.Unirest;
+//import com.mashape.unirest.http.exceptions.UnirestException;
+//import org.json.JSONArray;
+//import org.json.JSONObject;
+
 
 /**
  * <p>Decodes PharmaCode</p>
@@ -73,14 +74,14 @@ public final class PharmaCodeReader extends OneDReader {
   public Result decodeRow(int rowNumber, BitArray row, Map<DecodeHintType,?> hints)
       throws NotFoundException, ChecksumException, FormatException {
 
-    try {
-      Unirest.post("http://dev.aptinfo.net:8080")
-        .field("key", "value")
-        .asJson();
-    }
-    catch (Exception e) {
-      System.out.println("Exception occurred");
-    }
+    //try {
+    //  Unirest.post("http://dev.aptinfo.net:8080")
+    //    .field("key", "value")
+    //    .asJson();
+    //}
+    //catch (Exception e) {
+    //  System.out.println("Exception occurred");
+    //}
 
     int[] start = findAsteriskPattern(row);
     // Read off white space
