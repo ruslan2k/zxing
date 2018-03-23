@@ -87,7 +87,7 @@ public final class PharmaCodeReader extends OneDReader {
     // Read off white space
     int nextStart = row.getNextSet(start[1]);
     int end = row.getSize();
-
+    System.out.print("["+ end +"]");
     int[] theCounters = counters;
     Arrays.fill(theCounters, 0);
     StringBuilder result = decodeRowResult;
