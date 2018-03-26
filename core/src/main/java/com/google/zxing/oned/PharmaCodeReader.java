@@ -96,23 +96,23 @@ public final class PharmaCodeReader extends OneDReader {
         length = l;
       }
 
-      public getColor() {
+      public boolean getColor() {
         return color;
       }
 
-      public getLength() {
+      public int get_length () {
         return length;
       }
 
-      public setSimilar (int s) {
+      public void setSimilar (int s) {
         similar = s;
       }
 
-      public setSmallCnt (int small) {
+      public void setSmallCnt (int small) {
         small_cnt = small;
       }
 
-      public setLargeCnt (int large) {
+      public void setLargeCnt (int large) {
         large_cnt = large;
       }
     }
@@ -136,9 +136,10 @@ public final class PharmaCodeReader extends OneDReader {
     gaps.add(new PixelInterval(color, num));
 
     int gaps_length = gaps.size();
-    for (var i=0; i<gaps_length; i++) {
+    for (int i=0; i<gaps_length; i++) {
       PixelInterval primary = gaps.get(i);
     }
+    boolean a = false;
     //  var primary = gaps[i];
     //  var priColor = primary['color'];
     //  var pNum = primary['num']; // количество пикселей
