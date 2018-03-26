@@ -76,7 +76,6 @@ public final class PharmaCodeReader extends OneDReader {
   @Override
   public Result decodeRow(int rowNumber, BitArray row, Map<DecodeHintType,?> hints)
       throws NotFoundException, ChecksumException, FormatException {
-
     //try {
     //  Unirest.post("http://dev.aptinfo.net:8080")
     //    .field("key", "value")
@@ -85,13 +84,35 @@ public final class PharmaCodeReader extends OneDReader {
     //catch (Exception e) {
     //  System.out.println("Exception occurred");
     //}
-
     class PixelInterval {
-      boolean color;
-      int lenght;
+      private boolean color;
+      private int lenght = 0;
+
+      public PixelInterval(boolean c, int l) {
+        color = c;
+        lenght = l;
+      }
     }
 
-    List<PixelInterval> pixelIntervals = new ArrayList<PixelInterval>();
+    List<PixelInterval> gaps = new ArrayList<PixelInterval>();
+
+    //var arr = obj.arr;
+
+    int end = row.getSize();
+    boolean color = row.get(0);
+    int num = 0;
+
+    for (int i=0; i<end; i++) {
+      int currentColor = row.get(i);
+      if (currentColor == color) {
+        num ++;
+      } else {
+        gaps.add(new PixelInterval(color, num));
+        color = currentColor;
+        num = 1;
+      }
+    }
+    gaps.add(new PixelInterval(color, num));
 
     int[] start = findAsteriskPattern(row);
     // Read off white space
