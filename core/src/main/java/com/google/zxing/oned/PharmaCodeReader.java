@@ -103,7 +103,7 @@ public final class PharmaCodeReader extends OneDReader {
     int num = 0;
 
     for (int i=0; i<end; i++) {
-      int currentColor = row.get(i);
+      boolean currentColor = row.get(i);
       if (currentColor == color) {
         num ++;
       } else {
@@ -117,7 +117,6 @@ public final class PharmaCodeReader extends OneDReader {
     int[] start = findAsteriskPattern(row);
     // Read off white space
     int nextStart = row.getNextSet(start[1]);
-    int end = row.getSize();
 
     System.out.print("["+ end +"]");
     for (int i=0; i<end; i++) {
