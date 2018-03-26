@@ -162,7 +162,7 @@ public final class PharmaCodeReader extends OneDReader {
             // White and large black
             primary.incSimilar();
           } else {
-            console.log("NOT SIMILAR");
+            System.out.println("NOT SIMILAR");
           }
         } else if ((p_color == isBlack) && (s_color == isWhite)) {  // BLACK WHITE
           if ((multiplier > 1.5) && (multiplier < 3.6667) && (p_num < s_num)) {
@@ -187,10 +187,10 @@ public final class PharmaCodeReader extends OneDReader {
           } else if (multiplier < 2) {
             primary.incSimilar();
           } else {
-            console.log("NOT SIMILAR");
+            System.out.println("NOT SIMILAR");
           }
         } else {
-          console.log("UNKNOWN COLORS");
+          System.out.println("UNKNOWN COLORS");
         }
       }     // j
     }   // i
