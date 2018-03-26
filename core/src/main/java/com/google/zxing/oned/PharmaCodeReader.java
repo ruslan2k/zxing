@@ -67,6 +67,40 @@ public final class PharmaCodeReader extends OneDReader {
 
   private final StringBuilder decodeRowResult;
   private final int[] counters;
+  private static boolean isBlack = true;
+  private static boolean isWhite = false;
+
+  class PixelInterval {
+    private boolean color;
+    private int length = 0;
+    private int similar = 0;
+    private int small_cnt = 0;
+    private int large_cnt = 0;
+
+    public PixelInterval (boolean c, int l) {
+      color = c;
+      length = l;
+    }
+
+    public boolean getColor() { return color; }
+    public int getLength () { return length; }
+    public int getSimilar () { return similar; }
+    public int getSmall () { return small_cnt; }
+    public int getLarge () { return large_cnt; }
+
+    public void incSimilar () { similar ++; }
+    public void incSmall () { small_cnt ++; }
+    public void incLarge () { large_cnt ++; }
+  }
+
+  public static double mean(double[] m) {
+    double sum = 0;
+    int l = m.length;
+    for (int i = 0; i < l; i++) {
+      sum += m[i];
+    }
+    return sum / m.length;
+  }
 
   public PharmaCodeReader() {
     decodeRowResult = new StringBuilder(20);
@@ -76,52 +110,10 @@ public final class PharmaCodeReader extends OneDReader {
   @Override
   public Result decodeRow(int rowNumber, BitArray row, Map<DecodeHintType,?> hints)
       throws NotFoundException, ChecksumException, FormatException {
-    //try {
-    //  Unirest.post("http://dev.aptinfo.net:8080")
-    //    .field("key", "value")
-    //    .asJson();
-    //}
-    //catch (Exception e) {
-    //  System.out.println("Exception occurred");
-    //}
-    class PixelInterval {
-      private boolean color;
-      private int length = 0;
-      private int similar = 0;
-      private int small_cnt = 0;
-      private int large_cnt = 0;
-
-      public PixelInterval (boolean c, int l) {
-        color = c;
-        length = l;
-      }
-
-      public boolean getColor() {
-        return color;
-      }
-
-      public int getLength () {
-        return length;
-      }
-
-      public void incSimilar () {
-        similar ++;
-      }
-
-      public void incSmall () {
-        small_cnt ++;
-      }
-
-      public void incLarge () {
-        large_cnt ++;
-      }
-    }
 
     List<PixelInterval> gaps = new ArrayList<PixelInterval>();
 
     boolean color = row.get(0);
-    boolean isBlack = true;
-    boolean isWhite = false;
     int end = row.getSize();
     int num = 0;
 
@@ -196,14 +188,11 @@ public final class PharmaCodeReader extends OneDReader {
     }   // i
 
     boolean b = false;
+    int c = finalProcessing(gaps);
     int[] start = findAsteriskPattern(row);
     // Read off white space
     int nextStart = row.getNextSet(start[1]);
 
-    System.out.print("["+ end +"]");
-    for (int i=0; i<end; i++) {
-        System.out.print(" row["+ i +"]="+ row.get(i) +" ");
-    }
 
     int[] theCounters = counters;
     Arrays.fill(theCounters, 0);
@@ -267,7 +256,51 @@ public final class PharmaCodeReader extends OneDReader {
 
   private int finalProcessing (List<PixelInterval> gaps) throws NotFoundException {
     int l = gaps.size();
-
+    double[] similars = new double[l];
+    for (int i=0; i<l; i++) {
+      similars[i] = (double)gaps.get(i).getSimilar();
+    }
+    double dMean = mean(similars);
+    boolean inProgress = false;
+    String fStr = "";
+    String cStr = "";
+    for (int i=0; i<l; i++) {
+      PixelInterval gap = gaps.get(i);
+      boolean color = gap.getColor();
+      double sim = (double) gap.getSimilar();
+      if ((color == isWhite) && (!inProgress) && (sim < dMean)) {
+        System.out.println("start");
+        inProgress = true;
+        continue;
+      }
+      if (inProgress && (sim < dMean)) {
+        System.out.println("Similar is " + sim + " < " + dMean + " => BREAK");
+        if (color == isBlack) {
+          throw NotFoundException.getNotFoundInstance();
+        }
+        if ((color == isWhite) && ((i + 1) != l)) {
+          throw NotFoundException.getNotFoundInstance();
+        }
+      }
+      if (((i + 1) == l) && (gap.getColor() == isBlack)) {
+        System.out.println("last gap");
+        throw NotFoundException.getNotFoundInstance();
+      }
+      if (inProgress && (color == isBlack)) {
+        if (gap.getLarge() > gap.getSmall()) {
+          fStr = fStr.concat("1");
+          cStr = cStr.concat("#");
+        } else {
+          fStr = fStr.concat("0");
+          cStr = cStr.concat("=");
+        }
+      }
+    }
+    System.out.println("Str: "+ fStr +" "+ cStr);
+    String stg2 = "1".concat(fStr);
+    int ret_val = (Integer.parseInt(stg2, 2) - 1);
+    System.out.println(ret_val);
+    return ret_val;
   }
 
 
