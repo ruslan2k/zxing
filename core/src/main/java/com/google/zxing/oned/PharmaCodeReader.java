@@ -100,26 +100,28 @@ public final class PharmaCodeReader extends OneDReader {
         return color;
       }
 
-      public int get_length () {
+      public int getLength () {
         return length;
       }
 
-      public void setSimilar (int s) {
-        similar = s;
+      public void incSimilar () {
+        similar ++;
       }
 
-      public void setSmallCnt (int small) {
-        small_cnt = small;
+      public void incSmall () {
+        small_cnt ++;
       }
 
-      public void setLargeCnt (int large) {
-        large_cnt = large;
+      public void incLarge () {
+        large_cnt ++;
       }
     }
 
     List<PixelInterval> gaps = new ArrayList<PixelInterval>();
 
     boolean color = row.get(0);
+    boolean isBlack = true;
+    boolean isWhite = false;
     int end = row.getSize();
     int num = 0;
 
@@ -138,77 +140,62 @@ public final class PharmaCodeReader extends OneDReader {
     int gaps_length = gaps.size();
     for (int i=0; i<gaps_length; i++) {
       PixelInterval primary = gaps.get(i);
-    }
-    boolean a = false;
-    //  var primary = gaps[i];
-    //  var priColor = primary['color'];
-    //  var pNum = primary['num']; // количество пикселей
-    //  if (!('similar' in  primary)) {
-    //    gaps[i]['similar'] = 0;
-    //  }
-    //  if ((priColor === DEF_BLACK) && !('small' in  primary)) {
-    //    gaps[i]['small'] = 0;
-    //  }
-    //  if ((priColor === DEF_BLACK) && !('large' in  primary)) {
-    //    gaps[i]['large'] = 0;
-    //  }
-    //  for (var j=0; j<l2; j++) {
-    //    if (i === j) { continue; }
-    //    var secondary = gaps[j];
-    //    var secColor = secondary['color'];
-    //    var sNum = secondary['num'];
-    //    var multiplier = (pNum > sNum) ? (pNum / sNum) : (sNum / pNum);
-    //    console.log('gaps[i='+ i +']: '+ JSON.stringify(primary));
-    //    console.log('gaps[j='+ j +']: '+ JSON.stringify(secondary));
-    //    console.log(`multiplier: ${multiplier}`);
-    //    if ((priColor === DEF_WHITE) && (secColor === DEF_WHITE)) { // WHITE WHITE
-    //      if (multiplier <= 1.2222) {
-    //        gaps[i]['similar'] ++;
-    //      } else {
-    //        console.log('NOT SIMILAR');
-    //      }
-    //    } else if ((priColor === DEF_WHITE) && (secColor === DEF_BLACK)) {  // WHITE BLACK
-    //      if ((multiplier > 1.5) && (multiplier < 3.6667) && (pNum > sNum)) {
-    //        // White and small black
-    //        gaps[i]['similar'] ++;
-    //      } else if ((multiplier > 1.2727) && (multiplier < 2.7778) && (pNum > sNum)) {
-    //        // White and large black
-    //        gaps[i]['similar'] ++;
-    //      } else {
-    //        console.log('NOT SIMILAR');
-    //      }
-    //    } else if ((priColor === DEF_BLACK) && (secColor === DEF_WHITE)) {  // BLACK WHITE
-    //      if ((multiplier > 1.5) && (multiplier < 3.6667) && (pNum < sNum)) {
-    //        // Small black and white
-    //        gaps[i]['similar'] ++;
-    //        gaps[i]['small'] ++;
-    //      } else if ((multiplier > 1.2727) && (multiplier < 2.7778) && (pNum > sNum)) {
-    //        // large black and white
-    //        gaps[i]['similar'] ++;
-    //        gaps[i]['large'] ++;
-    //      } else {
-    //        console.log('NOT SIMILAR');
-    //      }
-    //    } else if ((priColor === DEF_BLACK) && (secColor === DEF_BLACK)) {
-    //      if ((multiplier > 2.3333) && (multiplier < 4.6667)) {
-    //        gaps[i]['similar'] ++;
-    //        if (pNum > sNum) {
-    //          gaps[i]['large'] ++;
-    //        } else {
-    //          gaps[i]['small'] ++;
-    //        }
-    //      } else if (multiplier < 2) {
-    //        gaps[i]['similar'] ++;
-    //      } else {
-    //        console.log('NOT SIMILAR');
-    //      }
-    //    } else {
-    //      console.log('UNKNOWN COLORS');
-    //    }
-    //  } // -- j
-    //} // -- i
+      boolean p_color = primary.getColor();
+      int p_num = primary.getLength();    // количество пикселей
+      for (int j=0; j<gaps_length; j++) {
+        if (i == j) { continue; }
+        int s_num = gaps.get(j).getLength();
+        boolean s_color = gaps.get(j).getColor();
+        double multiplier = (p_num > s_num) ? ((double)p_num / s_num) : ((double)s_num / p_num);
+        System.out.println("multiplier: " + multiplier);
+        if ((p_color == isWhite) && (s_color == isWhite)) { // WHITE WHITE
+          if (multiplier <= 1.2222) {
+            primary.incSimilar();
+          } else {
+            System.out.println("NOT SIMILAR");
+          }
+        } else if ((p_color == isWhite) && (s_color == isBlack)) {  // WHITE BLACK
+          if ((multiplier > 1.5) && (multiplier < 3.6667) && (p_num > s_num)) {
+            // White and small black
+            primary.incSimilar();
+          } else if ((multiplier > 1.2727) && (multiplier < 2.7778) && (p_num < s_num)) {
+            // White and large black
+            primary.incSimilar();
+          } else {
+            console.log("NOT SIMILAR");
+          }
+        } else if ((p_color == isBlack) && (s_color == isWhite)) {  // BLACK WHITE
+          if ((multiplier > 1.5) && (multiplier < 3.6667) && (p_num < s_num)) {
+            // Small black and white
+            primary.incSimilar();
+            primary.incSmall();
+          } else if ((multiplier > 1.2727) && (multiplier < 2.7778) && (p_num > s_num)) {
+            // large black and white
+            primary.incSimilar();
+            primary.incLarge();
+          } else {
+            System.out.println("NOT SIMILAR");
+          }
+        } else if ((p_color == isBlack) && (s_color == isBlack)) {
+          if ((multiplier > 2.3333) && (multiplier < 4.6667)) {
+            primary.incSimilar();
+            if (p_num > s_num) {
+              primary.incLarge();
+            } else {
+              primary.incSmall();
+            }
+          } else if (multiplier < 2) {
+            primary.incSimilar();
+          } else {
+            console.log("NOT SIMILAR");
+          }
+        } else {
+          console.log("UNKNOWN COLORS");
+        }
+      }     // j
+    }   // i
 
-
+    boolean b = false;
     int[] start = findAsteriskPattern(row);
     // Read off white space
     int nextStart = row.getNextSet(start[1]);
