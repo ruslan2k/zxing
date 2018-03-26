@@ -88,6 +88,10 @@ public final class PharmaCodeReader extends OneDReader {
     int nextStart = row.getNextSet(start[1]);
     int end = row.getSize();
 
+    for (int i=0; i<end; i++) {
+        System.out.print(" row["+ i +"]="+ row.get(i) +" ");
+    }
+
     int[] theCounters = counters;
     Arrays.fill(theCounters, 0);
     StringBuilder result = decodeRowResult;
