@@ -28,6 +28,9 @@ import com.google.zxing.common.BitArray;
 import java.util.Arrays;
 import java.util.Map;
 
+import java.util.List;
+import java.util.ArrayList;
+
 //import com.mashape.unirest.http.HttpResponse;
 //import com.mashape.unirest.http.JsonNode;
 //import com.mashape.unirest.http.Unirest;
@@ -82,6 +85,13 @@ public final class PharmaCodeReader extends OneDReader {
     //catch (Exception e) {
     //  System.out.println("Exception occurred");
     //}
+
+    class PixelInterval {
+      boolean color;
+      int lenght;
+    }
+
+    List<PixelInterval> pixelIntervals = new ArrayList<PixelInterval>();
 
     int[] start = findAsteriskPattern(row);
     // Read off white space
