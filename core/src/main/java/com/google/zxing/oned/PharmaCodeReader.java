@@ -144,7 +144,7 @@ public final class PharmaCodeReader extends OneDReader {
           if (multiplier <= 1.2222) {
             primary.incSimilar();
           } else {
-            System.out.println("NOT SIMILAR");
+            //System.out.println("NOT SIMILAR");
           }
         } else if ((p_color == isWhite) && (s_color == isBlack)) {  // WHITE BLACK
           if ((multiplier > 1.5) && (multiplier < 3.6667) && (p_num > s_num)) {
@@ -154,7 +154,7 @@ public final class PharmaCodeReader extends OneDReader {
             // White and large black
             primary.incSimilar();
           } else {
-            System.out.println("NOT SIMILAR");
+            //System.out.println("NOT SIMILAR");
           }
         } else if ((p_color == isBlack) && (s_color == isWhite)) {  // BLACK WHITE
           if ((multiplier > 1.5) && (multiplier < 3.6667) && (p_num < s_num)) {
@@ -166,7 +166,7 @@ public final class PharmaCodeReader extends OneDReader {
             primary.incSimilar();
             primary.incLarge();
           } else {
-            System.out.println("NOT SIMILAR");
+            //System.out.println("NOT SIMILAR");
           }
         } else if ((p_color == isBlack) && (s_color == isBlack)) {  // BLACK BLACK
           if ((multiplier > 2.3333) && (multiplier < 4.6667)) {
@@ -179,68 +179,71 @@ public final class PharmaCodeReader extends OneDReader {
           } else if (multiplier < 2) {
             primary.incSimilar();
           } else {
-            System.out.println("NOT SIMILAR");
+            //System.out.println("NOT SIMILAR");
           }
         } else {
-          System.out.println("UNKNOWN COLORS");
+          //System.out.println("UNKNOWN COLORS");
         }
       }     // j
     }   // i
 
     boolean b = false;
-    int c = finalProcessing(gaps);
-    int[] start = findAsteriskPattern(row);
-    // Read off white space
-    int nextStart = row.getNextSet(start[1]);
+    int iResult = finalProcessing(gaps);
+    String resultString = Integer.toString(iResult);
+    //int[] start = findAsteriskPattern(row);
+    //// Read off white space
+    //int nextStart = row.getNextSet(start[1]);
 
 
-    int[] theCounters = counters;
-    Arrays.fill(theCounters, 0);
-    StringBuilder result = decodeRowResult;
-    result.setLength(0);
+    //int[] theCounters = counters;
+    //Arrays.fill(theCounters, 0);
+    //StringBuilder result = decodeRowResult;
+    //result.setLength(0);
 
-    char decodedChar;
-    int lastStart;
-    do {
-      recordPattern(row, nextStart, theCounters);
-      int pattern = toPattern(theCounters);
-      if (pattern < 0) {
-        throw NotFoundException.getNotFoundInstance();
-      }
-      decodedChar = patternToChar(pattern);
-      result.append(decodedChar);
-      lastStart = nextStart;
-      for (int counter : theCounters) {
-        nextStart += counter;
-      }
-      // Read off white space
-      nextStart = row.getNextSet(nextStart);
-    } while (decodedChar != '*');
-    result.deleteCharAt(result.length() - 1); // remove asterisk
+    //char decodedChar;
+    //int lastStart;
+    //do {
+    //  recordPattern(row, nextStart, theCounters);
+    //  int pattern = toPattern(theCounters);
+    //  if (pattern < 0) {
+    //    throw NotFoundException.getNotFoundInstance();
+    //  }
+    //  decodedChar = patternToChar(pattern);
+    //  result.append(decodedChar);
+    //  lastStart = nextStart;
+    //  for (int counter : theCounters) {
+    //    nextStart += counter;
+    //  }
+    //  // Read off white space
+    //  nextStart = row.getNextSet(nextStart);
+    //} while (decodedChar != '*');
+    //result.deleteCharAt(result.length() - 1); // remove asterisk
 
-    int lastPatternSize = 0;
-    for (int counter : theCounters) {
-      lastPatternSize += counter;
-    }
+    //int lastPatternSize = 0;
+    //for (int counter : theCounters) {
+    //  lastPatternSize += counter;
+    //}
 
-    // Should be at least one more black module
-    if (nextStart == end || !row.get(nextStart)) {
-      throw NotFoundException.getNotFoundInstance();
-    }
+    //// Should be at least one more black module
+    //if (nextStart == end || !row.get(nextStart)) {
+    //  throw NotFoundException.getNotFoundInstance();
+    //}
 
-    if (result.length() < 2) {
-      // false positive -- need at least 2 checksum digits
-      throw NotFoundException.getNotFoundInstance();
-    }
+    //if (result.length() < 2) {
+    //  // false positive -- need at least 2 checksum digits
+    //  throw NotFoundException.getNotFoundInstance();
+    //}
 
-    checkChecksums(result);
-    // Remove checksum digits
-    result.setLength(result.length() - 2);
+    //checkChecksums(result);
+    //// Remove checksum digits
+    //result.setLength(result.length() - 2);
 
-    String resultString = decodeExtended(result);
+    //String resultString = decodeExtended(result);
 
-    float left = (start[1] + start[0]) / 2.0f;
-    float right = lastStart + lastPatternSize / 2.0f;
+    //float left = (start[1] + start[0]) / 2.0f;
+    //float right = lastStart + lastPatternSize / 2.0f;
+    float left = 0.0f;
+    float right = (float)(end - 1);
     return new Result(
         resultString,
         null,

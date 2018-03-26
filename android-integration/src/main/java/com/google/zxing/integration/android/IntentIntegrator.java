@@ -124,13 +124,12 @@ public class IntentIntegrator {
   // supported barcode formats
   public static final Collection<String> PRODUCT_CODE_TYPES = list("UPC_A", "UPC_E", "EAN_8", "EAN_13", "RSS_14");
   public static final Collection<String> ONE_D_CODE_TYPES =
-      list("UPC_A", "UPC_E", "EAN_8", "EAN_13", "CODE_39", "CODE_93", "CODE_128",
-           "ITF", "RSS_14", "RSS_EXPANDED", "PHARMA_CODE");
+      list("UPC_A", "UPC_E", "EAN_8", "EAN_13", "CODE_39", "CODE_93", "CODE_128", "ITF", "RSS_14", "RSS_EXPANDED", "PHARMA_CODE");
   public static final Collection<String> QR_CODE_TYPES = Collections.singleton("QR_CODE");
   public static final Collection<String> DATA_MATRIX_TYPES = Collections.singleton("DATA_MATRIX");
 
   public static final Collection<String> ALL_CODE_TYPES = null;
-  
+
   public static final List<String> TARGET_BARCODE_SCANNER_ONLY = Collections.singletonList(BS_PACKAGE);
   public static final List<String> TARGET_ALL_KNOWN = list(
           BSPLUS_PACKAGE,             // Barcode Scanner+
@@ -142,7 +141,7 @@ public class IntentIntegrator {
   // Should be FLAG_ACTIVITY_NEW_DOCUMENT in API 21+.
   // Defined once here because the current value is deprecated, so generates just one warning
   private static final int FLAG_NEW_DOC = Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
-  
+
   private final Activity activity;
   private final Fragment fragment;
 
@@ -180,11 +179,11 @@ public class IntentIntegrator {
     buttonNo = DEFAULT_NO;
     targetApplications = TARGET_ALL_KNOWN;
   }
-  
+
   public String getTitle() {
     return title;
   }
-  
+
   public void setTitle(String title) {
     this.title = title;
   }
@@ -228,18 +227,18 @@ public class IntentIntegrator {
   public void setButtonNoByID(int buttonNoID) {
     buttonNo = activity.getString(buttonNoID);
   }
-  
+
   public Collection<String> getTargetApplications() {
     return targetApplications;
   }
-  
+
   public final void setTargetApplications(List<String> targetApplications) {
     if (targetApplications.isEmpty()) {
       throw new IllegalArgumentException("No target applications");
     }
     this.targetApplications = targetApplications;
   }
-  
+
   public void setSingleTargetApplication(String targetApplication) {
     this.targetApplications = Collections.singletonList(targetApplication);
   }
