@@ -176,7 +176,7 @@ public final class PharmaCodeReader extends OneDReader {
           } else {
             System.out.println("NOT SIMILAR");
           }
-        } else if ((p_color == isBlack) && (s_color == isBlack)) {
+        } else if ((p_color == isBlack) && (s_color == isBlack)) {  // BLACK BLACK
           if ((multiplier > 2.3333) && (multiplier < 4.6667)) {
             primary.incSimilar();
             if (p_num > s_num) {
@@ -263,6 +263,13 @@ public final class PharmaCodeReader extends OneDReader {
     );
 
   }
+
+
+  private int finalProcessing (List<PixelInterval> gaps) throws NotFoundException {
+    int l = gaps.size();
+
+  }
+
 
   private int[] findAsteriskPattern(BitArray row) throws NotFoundException {
     int width = row.getSize();
