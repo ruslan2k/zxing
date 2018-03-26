@@ -86,20 +86,41 @@ public final class PharmaCodeReader extends OneDReader {
     //}
     class PixelInterval {
       private boolean color;
-      private int lenght = 0;
+      private int length = 0;
+      private int similar = 0;
+      private int small_cnt = 0;
+      private int large_cnt = 0;
 
-      public PixelInterval(boolean c, int l) {
+      public PixelInterval (boolean c, int l) {
         color = c;
-        lenght = l;
+        length = l;
+      }
+
+      public getColor() {
+        return color;
+      }
+
+      public getLength() {
+        return length;
+      }
+
+      public setSimilar (int s) {
+        similar = s;
+      }
+
+      public setSmallCnt (int small) {
+        small_cnt = small;
+      }
+
+      public setLargeCnt (int large) {
+        large_cnt = large;
       }
     }
 
     List<PixelInterval> gaps = new ArrayList<PixelInterval>();
 
-    //var arr = obj.arr;
-
-    int end = row.getSize();
     boolean color = row.get(0);
+    int end = row.getSize();
     int num = 0;
 
     for (int i=0; i<end; i++) {
@@ -113,6 +134,79 @@ public final class PharmaCodeReader extends OneDReader {
       }
     }
     gaps.add(new PixelInterval(color, num));
+
+    int gaps_length = gaps.size();
+    for (var i=0; i<gaps_length; i++) {
+      PixelInterval primary = gaps.get(i);
+    }
+    //  var primary = gaps[i];
+    //  var priColor = primary['color'];
+    //  var pNum = primary['num']; // количество пикселей
+    //  if (!('similar' in  primary)) {
+    //    gaps[i]['similar'] = 0;
+    //  }
+    //  if ((priColor === DEF_BLACK) && !('small' in  primary)) {
+    //    gaps[i]['small'] = 0;
+    //  }
+    //  if ((priColor === DEF_BLACK) && !('large' in  primary)) {
+    //    gaps[i]['large'] = 0;
+    //  }
+    //  for (var j=0; j<l2; j++) {
+    //    if (i === j) { continue; }
+    //    var secondary = gaps[j];
+    //    var secColor = secondary['color'];
+    //    var sNum = secondary['num'];
+    //    var multiplier = (pNum > sNum) ? (pNum / sNum) : (sNum / pNum);
+    //    console.log('gaps[i='+ i +']: '+ JSON.stringify(primary));
+    //    console.log('gaps[j='+ j +']: '+ JSON.stringify(secondary));
+    //    console.log(`multiplier: ${multiplier}`);
+    //    if ((priColor === DEF_WHITE) && (secColor === DEF_WHITE)) { // WHITE WHITE
+    //      if (multiplier <= 1.2222) {
+    //        gaps[i]['similar'] ++;
+    //      } else {
+    //        console.log('NOT SIMILAR');
+    //      }
+    //    } else if ((priColor === DEF_WHITE) && (secColor === DEF_BLACK)) {  // WHITE BLACK
+    //      if ((multiplier > 1.5) && (multiplier < 3.6667) && (pNum > sNum)) {
+    //        // White and small black
+    //        gaps[i]['similar'] ++;
+    //      } else if ((multiplier > 1.2727) && (multiplier < 2.7778) && (pNum > sNum)) {
+    //        // White and large black
+    //        gaps[i]['similar'] ++;
+    //      } else {
+    //        console.log('NOT SIMILAR');
+    //      }
+    //    } else if ((priColor === DEF_BLACK) && (secColor === DEF_WHITE)) {  // BLACK WHITE
+    //      if ((multiplier > 1.5) && (multiplier < 3.6667) && (pNum < sNum)) {
+    //        // Small black and white
+    //        gaps[i]['similar'] ++;
+    //        gaps[i]['small'] ++;
+    //      } else if ((multiplier > 1.2727) && (multiplier < 2.7778) && (pNum > sNum)) {
+    //        // large black and white
+    //        gaps[i]['similar'] ++;
+    //        gaps[i]['large'] ++;
+    //      } else {
+    //        console.log('NOT SIMILAR');
+    //      }
+    //    } else if ((priColor === DEF_BLACK) && (secColor === DEF_BLACK)) {
+    //      if ((multiplier > 2.3333) && (multiplier < 4.6667)) {
+    //        gaps[i]['similar'] ++;
+    //        if (pNum > sNum) {
+    //          gaps[i]['large'] ++;
+    //        } else {
+    //          gaps[i]['small'] ++;
+    //        }
+    //      } else if (multiplier < 2) {
+    //        gaps[i]['similar'] ++;
+    //      } else {
+    //        console.log('NOT SIMILAR');
+    //      }
+    //    } else {
+    //      console.log('UNKNOWN COLORS');
+    //    }
+    //  } // -- j
+    //} // -- i
+
 
     int[] start = findAsteriskPattern(row);
     // Read off white space
