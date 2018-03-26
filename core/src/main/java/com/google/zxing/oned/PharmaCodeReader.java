@@ -139,7 +139,7 @@ public final class PharmaCodeReader extends OneDReader {
         int s_num = gaps.get(j).getLength();
         boolean s_color = gaps.get(j).getColor();
         double multiplier = (p_num > s_num) ? ((double)p_num / s_num) : ((double)s_num / p_num);
-        System.out.println("multiplier: " + multiplier);
+        //System.out.println("multiplier: " + multiplier);
         if ((p_color == isWhite) && (s_color == isWhite)) { // WHITE WHITE
           if (multiplier <= 1.2222) {
             primary.incSimilar();
@@ -189,6 +189,9 @@ public final class PharmaCodeReader extends OneDReader {
 
     boolean b = false;
     int iResult = finalProcessing(gaps);
+    if ((iResult < 3) || (iResult > 131070)) {
+      throw NotFoundException.getNotFoundInstance();
+    }
     String resultString = Integer.toString(iResult);
     //int[] start = findAsteriskPattern(row);
     //// Read off white space
@@ -272,12 +275,12 @@ public final class PharmaCodeReader extends OneDReader {
       boolean color = gap.getColor();
       double sim = (double) gap.getSimilar();
       if ((color == isWhite) && (!inProgress) && (sim < dMean)) {
-        System.out.println("start");
+        //System.out.println("start");
         inProgress = true;
         continue;
       }
       if (inProgress && (sim < dMean)) {
-        System.out.println("Similar is " + sim + " < " + dMean + " => BREAK");
+        //System.out.println("Similar is " + sim + " < " + dMean + " => BREAK");
         if (color == isBlack) {
           throw NotFoundException.getNotFoundInstance();
         }
@@ -286,7 +289,7 @@ public final class PharmaCodeReader extends OneDReader {
         }
       }
       if (((i + 1) == l) && (gap.getColor() == isBlack)) {
-        System.out.println("last gap");
+        //System.out.println("last gap");
         throw NotFoundException.getNotFoundInstance();
       }
       if (inProgress && (color == isBlack)) {
@@ -299,10 +302,10 @@ public final class PharmaCodeReader extends OneDReader {
         }
       }
     }
-    System.out.println("Str: "+ fStr +" "+ cStr);
+    //System.out.println("Str: "+ fStr +" "+ cStr);
     String stg2 = "1".concat(fStr);
     int ret_val = (Integer.parseInt(stg2, 2) - 1);
-    System.out.println(ret_val);
+    //System.out.println(ret_val);
     return ret_val;
   }
 
