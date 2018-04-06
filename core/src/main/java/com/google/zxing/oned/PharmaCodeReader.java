@@ -24,6 +24,9 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -245,6 +248,15 @@ public final class PharmaCodeReader extends OneDReader {
 
     //float left = (start[1] + start[0]) / 2.0f;
     //float right = lastStart + lastPatternSize / 2.0f;
+
+    HttpResponse<JsonNode> jsonResponse = Unirest.post("http://dev.aptinfo.net:5000")
+      .header("accept", "application/json")
+      .queryString("apiKey", "123")
+      .queryString("resultString", resultString)
+      .field("parameter", "value")
+      .field("foo", "bar")
+      .asJson();
+
     float left = 0.0f;
     float right = (float)(end - 1);
     return new Result(
