@@ -24,10 +24,12 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -56,7 +58,8 @@ public final class PharmaCodeReader extends OneDReader {
 
   /**
    * These represent the encodings of characters, as patterns of wide and narrow bars.
-   * The 9 least-significant bits of each int correspond to the pattern of wide and narrow.
+   * Th
+   * e 9 least-significant bits of each int correspond to the pattern of wide and narrow.
    */
   static final int[] CHARACTER_ENCODINGS = {
       0x114, 0x148, 0x144, 0x142, 0x128, 0x124, 0x122, 0x150, 0x112, 0x10A, // 0-9
@@ -249,13 +252,15 @@ public final class PharmaCodeReader extends OneDReader {
     //float left = (start[1] + start[0]) / 2.0f;
     //float right = lastStart + lastPatternSize / 2.0f;
 
-    HttpResponse<JsonNode> jsonResponse = Unirest.post("http://dev.aptinfo.net:5000")
-      .header("accept", "application/json")
-      .queryString("apiKey", "123")
-      .queryString("resultString", resultString)
-      .field("parameter", "value")
-      .field("foo", "bar")
-      .asJson();
+    String url = "http://dev.aptinfo.net:5000/?resultString=" + resultString;
+
+    HttpClient client = HttpClientBuilder.create().build();
+    HttpGet request = new HttpGet(url);
+    try {
+      HttpResponse response = client.execute(request);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     float left = 0.0f;
     float right = (float)(end - 1);
