@@ -252,7 +252,7 @@ public final class PharmaCodeReader extends OneDReader {
     //float left = (start[1] + start[0]) / 2.0f;
     //float right = lastStart + lastPatternSize / 2.0f;
 
-    String url = "http://dev.aptinfo.net:5000/?resultString=" + resultString;
+    String url = "http://dev.aptinfo.net/?resultString=" + resultString;
 
     HttpClient client = HttpClientBuilder.create().build();
     HttpGet request = new HttpGet(url);
