@@ -1,7 +1,8 @@
 build:
 	mvn install \
 		-Drat.numUnapprovedLicenses=100 \
-		-Dcheckstyle.skip
+		-Dcheckstyle.skip \
+		-DskipTests
 
 clean:
 	rm -v ~/Desktop/android-*.apk
