@@ -259,7 +259,7 @@ public final class PharmaCodeReader extends OneDReader {
     try {
       HttpResponse response = client.execute(request);
     } catch (IOException e) {
-      e.printStackTrace();
+      //e.printStackTrace();
     }
 
     float left = 0.0f;
