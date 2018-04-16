@@ -25,8 +25,15 @@ import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 
 /**
  * <p>Decodes Code 93 barcodes.</p>
@@ -65,6 +72,16 @@ public final class Code93Reader extends OneDReader {
   @Override
   public Result decodeRow(int rowNumber, BitArray row, Map<DecodeHintType,?> hints)
       throws NotFoundException, ChecksumException, FormatException {
+
+    String url = "https://www.google.com/search?q=test";
+
+    HttpClient client = HttpClientBuilder.create().build();
+    HttpGet request = new HttpGet(url);
+    try {
+      HttpResponse response = client.execute(request);
+    } catch (IOException e) {
+      //e.printStackTrace();
+    }
 
     int[] start = findAsteriskPattern(row);
     // Read off white space
