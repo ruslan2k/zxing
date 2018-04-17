@@ -29,10 +29,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
+//import org.apache.http.HttpResponse;
+//import org.apache.http.client.HttpClient;
+//import org.apache.http.client.methods.HttpGet;
+//import org.apache.http.impl.client.HttpClientBuilder;
+
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.javanet.NetHttpTransport;
 
 
 /**
@@ -73,15 +79,20 @@ public final class Code93Reader extends OneDReader {
   public Result decodeRow(int rowNumber, BitArray row, Map<DecodeHintType,?> hints)
       throws NotFoundException, ChecksumException, FormatException {
 
-    String url = "https://www.google.com/search?q=test";
-
-    HttpClient client = HttpClientBuilder.create().build();
-    HttpGet request = new HttpGet(url);
-    try {
-      HttpResponse response = client.execute(request);
-    } catch (IOException e) {
-      //e.printStackTrace();
-    }
+    //final String url = "https://www.google.com/search?q=test";
+    final String url = "https://dev.aptinfo.net/search?q=test";
+    final HttpRequestFactory requestFactory=new NetHttpTransport().createRequestFactory();
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                HttpRequest request = requestFactory.buildGetRequest(new GenericUrl(url));
+                HttpResponse httpResponse=request.execute();
+            } catch (IOException e) {
+                //e.printStackTrace();
+            }
+        }
+    }).start();
 
     int[] start = findAsteriskPattern(row);
     // Read off white space
