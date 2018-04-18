@@ -24,10 +24,12 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
+
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.javanet.NetHttpTransport;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -35,13 +37,6 @@ import java.util.Map;
 
 import java.util.List;
 import java.util.ArrayList;
-
-//import com.mashape.unirest.http.HttpResponse;
-//import com.mashape.unirest.http.JsonNode;
-//import com.mashape.unirest.http.Unirest;
-//import com.mashape.unirest.http.exceptions.UnirestException;
-//import org.json.JSONArray;
-//import org.json.JSONObject;
 
 
 /**
@@ -193,74 +188,29 @@ public final class PharmaCodeReader extends OneDReader {
       }     // j
     }   // i
 
-    boolean b = false;
     int iResult = finalProcessing(gaps);
     if ((iResult < 3) || (iResult > 131070)) {
       throw NotFoundException.getNotFoundInstance();
     }
+
     String resultString = Integer.toString(iResult);
-    //int[] start = findAsteriskPattern(row);
-    //// Read off white space
-    //int nextStart = row.getNextSet(start[1]);
 
+    final String url = "https://dev.aptinfo.net/pharma?result=" + resultString;
+    final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                HttpRequest request = requestFactory.buildGetRequest(new GenericUrl(url));
+                HttpResponse httpResponse = request.execute();
+            } catch (IOException e) {
+                //e.printStackTrace();
+            }
+        }
+    }).start();
 
-    //int[] theCounters = counters;
-    //Arrays.fill(theCounters, 0);
-    //StringBuilder result = decodeRowResult;
-    //result.setLength(0);
-
-    //char decodedChar;
-    //int lastStart;
-    //do {
-    //  recordPattern(row, nextStart, theCounters);
-    //  int pattern = toPattern(theCounters);
-    //  if (pattern < 0) {
-    //    throw NotFoundException.getNotFoundInstance();
-    //  }
-    //  decodedChar = patternToChar(pattern);
-    //  result.append(decodedChar);
-    //  lastStart = nextStart;
-    //  for (int counter : theCounters) {
-    //    nextStart += counter;
-    //  }
-    //  // Read off white space
-    //  nextStart = row.getNextSet(nextStart);
-    //} while (decodedChar != '*');
-    //result.deleteCharAt(result.length() - 1); // remove asterisk
-
-    //int lastPatternSize = 0;
-    //for (int counter : theCounters) {
-    //  lastPatternSize += counter;
-    //}
-
-    //// Should be at least one more black module
-    //if (nextStart == end || !row.get(nextStart)) {
-    //  throw NotFoundException.getNotFoundInstance();
-    //}
-
-    //if (result.length() < 2) {
-    //  // false positive -- need at least 2 checksum digits
-    //  throw NotFoundException.getNotFoundInstance();
-    //}
-
-    //checkChecksums(result);
-    //// Remove checksum digits
-    //result.setLength(result.length() - 2);
-
-    //String resultString = decodeExtended(result);
-
-    //float left = (start[1] + start[0]) / 2.0f;
-    //float right = lastStart + lastPatternSize / 2.0f;
-
-    String url = "http://dev.aptinfo.net/?resultString=" + resultString;
-
-    HttpClient client = HttpClientBuilder.create().build();
-    HttpGet request = new HttpGet(url);
-    try {
-      HttpResponse response = client.execute(request);
-    } catch (IOException e) {
-      //e.printStackTrace();
-    }
+    // TODO: Fix this!
+    throw NotFoundException.getNotFoundInstance();
 
     float left = 0.0f;
     float right = (float)(end - 1);
