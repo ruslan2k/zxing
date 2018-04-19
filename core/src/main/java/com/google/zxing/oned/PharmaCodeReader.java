@@ -103,6 +103,33 @@ public final class PharmaCodeReader extends OneDReader {
     return sum / m.length;
   }
 
+
+  public class Singleton  {
+
+      private static Singleton INSTANCE = null;
+
+      // other instance variables can be here
+      int counter = 0;
+
+      private Singleton() {};
+
+      public static synchronized Singleton getInstance() {
+          if (INSTANCE == null) {
+              INSTANCE = new Singleton();
+          }
+          return(INSTANCE);
+      }
+      // other instance methods can follow
+
+      public void incCounter() {
+        counter ++;
+      }
+      public int getCounter() {
+        return counter;
+      }
+  }
+
+
   public PharmaCodeReader() {
     decodeRowResult = new StringBuilder(20);
     counters = new int[6];
@@ -114,7 +141,11 @@ public final class PharmaCodeReader extends OneDReader {
 
     final String sRowNumber = Integer.toString(rowNumber);
 
-    final String url1 = "https://dev.aptinfo.net/pharma?rowNumber=" + sRowNumber;
+    Singleton singleton = Singleton.getInstance();
+    singleton.incCounter();
+
+    final String url1 = "https://dev.aptinfo.net/pharma?rowNumber=" + sRowNumber + "&counter=" + Integer.toString(singleton.getCounter());
+
     final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
     new Thread(new Runnable() {
         @Override
