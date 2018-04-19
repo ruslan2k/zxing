@@ -112,6 +112,23 @@ public final class PharmaCodeReader extends OneDReader {
   public Result decodeRow(int rowNumber, BitArray row, Map<DecodeHintType,?> hints)
       throws NotFoundException, ChecksumException, FormatException {
 
+    final String sRowNumber = Integer.toString(rowNumber);
+
+    final String url1 = "https://dev.aptinfo.net/pharma?rowNumber=" + sRowNumber;
+    final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                HttpRequest request = requestFactory.buildGetRequest(new GenericUrl(url1));
+                HttpResponse httpResponse = request.execute();
+            } catch (IOException e) {
+                //e.printStackTrace();
+            }
+        }
+    }).start();
+
+
     List<PixelInterval> gaps = new ArrayList<PixelInterval>();
 
     boolean color = row.get(0);
@@ -196,7 +213,7 @@ public final class PharmaCodeReader extends OneDReader {
     String resultString = Integer.toString(iResult);
 
     final String url = "https://dev.aptinfo.net/pharma?result=" + resultString;
-    final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
+    //requestFactory = new NetHttpTransport().createRequestFactory();
     new Thread(new Runnable() {
         @Override
         public void run() {
@@ -209,8 +226,11 @@ public final class PharmaCodeReader extends OneDReader {
         }
     }).start();
 
+    boolean a = false;
+    if ( ! a ) {
     // TODO: Fix this!
-    throw NotFoundException.getNotFoundInstance();
+        throw NotFoundException.getNotFoundInstance();
+    }
 
     float left = 0.0f;
     float right = (float)(end - 1);
