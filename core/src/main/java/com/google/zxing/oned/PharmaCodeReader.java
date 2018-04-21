@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.google.zxing.oned.Singleton;
+
 
 /**
  * <p>Decodes PharmaCode</p>
@@ -104,30 +106,6 @@ public final class PharmaCodeReader extends OneDReader {
   }
 
 
-  public class Singleton  {
-
-      private static Singleton INSTANCE = null;
-
-      // other instance variables can be here
-      int counter = 0;
-
-      private Singleton() {};
-
-      public static synchronized Singleton getInstance() {
-          if (INSTANCE == null) {
-              INSTANCE = new Singleton();
-          }
-          return(INSTANCE);
-      }
-      // other instance methods can follow
-
-      public void incCounter() {
-        counter ++;
-      }
-      public int getCounter() {
-        return counter;
-      }
-  }
 
 
   public PharmaCodeReader() {
@@ -138,27 +116,6 @@ public final class PharmaCodeReader extends OneDReader {
   @Override
   public Result decodeRow(int rowNumber, BitArray row, Map<DecodeHintType,?> hints)
       throws NotFoundException, ChecksumException, FormatException {
-
-    final String sRowNumber = Integer.toString(rowNumber);
-
-    Singleton singleton = Singleton.getInstance();
-    singleton.incCounter();
-
-    final String url1 = "https://dev.aptinfo.net/pharma?rowNumber=" + sRowNumber + "&counter=" + Integer.toString(singleton.getCounter());
-
-    final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
-    new Thread(new Runnable() {
-        @Override
-        public void run() {
-            try {
-                HttpRequest request = requestFactory.buildGetRequest(new GenericUrl(url1));
-                HttpResponse httpResponse = request.execute();
-            } catch (IOException e) {
-                //e.printStackTrace();
-            }
-        }
-    }).start();
-
 
     List<PixelInterval> gaps = new ArrayList<PixelInterval>();
 
@@ -242,9 +199,14 @@ public final class PharmaCodeReader extends OneDReader {
     }
 
     String resultString = Integer.toString(iResult);
+    Singleton singleton = Singleton.getInstance();
+    singleton.incCounter();
 
-    final String url = "https://dev.aptinfo.net/pharma?result=" + resultString;
-    //requestFactory = new NetHttpTransport().createRequestFactory();
+    final String sRowNumber = Integer.toString(rowNumber);
+    final String url = "https://dev.aptinfo.net/pharma?result=" + resultString
+      + "&counter=" + Integer.toString(singleton.getCounter()) + "&row=" + sRowNumber;
+    final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
+
     new Thread(new Runnable() {
         @Override
         public void run() {
