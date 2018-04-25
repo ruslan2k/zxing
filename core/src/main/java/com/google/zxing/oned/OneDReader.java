@@ -53,6 +53,7 @@ public abstract class OneDReader implements Reader {
     try {
       return doDecode(image, hints);
     } catch (NotFoundException nfe) {
+      throw nfe;
       boolean tryHarder = hints != null && hints.containsKey(DecodeHintType.TRY_HARDER);
       if (tryHarder && image.isRotateSupported()) {
         BinaryBitmap rotatedImage = image.rotateCounterClockwise();

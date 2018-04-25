@@ -1,4 +1,4 @@
-package net.aptinfo;
+package com.google.zxing.oned;
 
 public class CodeElement {
     private int iCode;

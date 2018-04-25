@@ -1,8 +1,7 @@
-package net.aptinfo;
+package com.google.zxing.oned;
 
 import com.sun.org.apache.bcel.internal.classfile.Code;
-import net.aptinfo.CircularList;
-import net.aptinfo.CodeElement;
+import com.google.zxing.oned.CodeElement;
 
 public class Counter {
     private static Counter INSTANCE = null;
