@@ -53,8 +53,11 @@ public abstract class OneDReader implements Reader {
     try {
       return doDecode(image, hints);
     } catch (NotFoundException nfe) {
-      throw nfe;
       boolean tryHarder = hints != null && hints.containsKey(DecodeHintType.TRY_HARDER);
+      /** TODO: Remove this
+       boolean x = false;
+       if (tryHarder && image.isRotateSupported() && x) {
+       */
       if (tryHarder && image.isRotateSupported()) {
         BinaryBitmap rotatedImage = image.rotateCounterClockwise();
         Result result = doDecode(rotatedImage, hints);
@@ -139,7 +142,8 @@ public abstract class OneDReader implements Reader {
       // handle decoding upside down barcodes.
       for (int attempt = 0; attempt < 2; attempt++) {
         if (attempt == 1) { // trying again?
-          row.reverse(); // reverse the row and continue
+          // TODO
+          // row.reverse(); // reverse the row and continue
           // This means we will only ever draw result points *once* in the life of this method
           // since we want to avoid drawing the wrong points after flipping the row, and,
           // don't want to clutter with noise from every single row scan -- just the scans
