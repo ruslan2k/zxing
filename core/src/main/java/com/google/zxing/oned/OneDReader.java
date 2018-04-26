@@ -140,10 +140,10 @@ public abstract class OneDReader implements Reader {
 
       // While we have the image data in a BitArray, it's fairly cheap to reverse it in place to
       // handle decoding upside down barcodes.
+      /*
       for (int attempt = 0; attempt < 2; attempt++) {
         if (attempt == 1) { // trying again?
-          // TODO
-          // row.reverse(); // reverse the row and continue
+          row.reverse(); // reverse the row and continue
           // This means we will only ever draw result points *once* in the life of this method
           // since we want to avoid drawing the wrong points after flipping the row, and,
           // don't want to clutter with noise from every single row scan -- just the scans
@@ -174,6 +174,7 @@ public abstract class OneDReader implements Reader {
           // continue -- just couldn't decode this row
         }
       }
+      */
     }
 
     throw NotFoundException.getNotFoundInstance();
