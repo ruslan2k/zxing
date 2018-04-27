@@ -5,19 +5,24 @@ import com.google.zxing.oned.CodeElement;
 
 public class Counter {
     private static Counter INSTANCE = null;
-    private int SIZE = 10;
+    private int SIZE;
     private int counter;
     private CodeElement[] cListArray;
 
-    private Counter() {
+    private Counter(int s) {
+        SIZE = s;
         counter = 0;
         cListArray = new CodeElement[SIZE];
     }
+
     public static synchronized Counter getInstance() {
-      if (INSTANCE == null) {
-        INSTANCE = new Counter();
-      }
-      return(INSTANCE);
+        return getInstance(10);
+    }
+    public static synchronized Counter getInstance(int s) {
+        if (INSTANCE == null) {
+            INSTANCE = new Counter(s);
+        }
+        return(INSTANCE);
     }
     // other instance methods can follow
     public void addCode(int iCode) {

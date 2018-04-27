@@ -38,8 +38,8 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.google.zxing.oned.Singleton;
-
+//import com.google.zxing.oned.Singleton;
+import com.google.zxing.oned.Counter;
 
 /**
  * <p>Decodes PharmaCode</p>
@@ -52,7 +52,6 @@ public final class PharmaCodeReader extends OneDReader {
   // Note that 'abcd' are dummy characters in place of control characters.
   static final String ALPHABET_STRING = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%abcd*";
   private static final char[] ALPHABET = ALPHABET_STRING.toCharArray();
-
   /**
    * These represent the encodings of characters, as patterns of wide and narrow bars.
    * Th
@@ -199,14 +198,12 @@ public final class PharmaCodeReader extends OneDReader {
     }
 
     String resultString = Integer.toString(iResult);
-    Singleton singleton = Singleton.getInstance();
-    singleton.incCounter();
+    Counter counter = Counter.getInstance(20);
+    counter.addCode(iResult);
 
     final String sRowNumber = Integer.toString(rowNumber);
-    final String url = "https://dev.aptinfo.net/pharma?result=" + resultString
-      + "&counter=" + Integer.toString(singleton.getCounter()) + "&row=" + sRowNumber;
+    final String url = "https://dev.aptinfo.net/pharma?result=" + resultString;
     final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
-
     new Thread(new Runnable() {
         @Override
         public void run() {
@@ -219,9 +216,7 @@ public final class PharmaCodeReader extends OneDReader {
         }
     }).start();
 
-    boolean a = true;
-    if ( a ) {
-    // TODO: Fix this!
+    if ( ! counter.isCodeValid(iResult) ) {
         throw NotFoundException.getNotFoundInstance();
     }
 
