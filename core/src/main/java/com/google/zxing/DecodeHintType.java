@@ -98,6 +98,12 @@ public enum DecodeHintType {
    */
   ALLOWED_EAN_EXTENSIONS(int[].class),
 
+
+  /**
+   * Ruslan
+   */
+  PHARMA_REVERSE(Void.class),
+
   // End of enumeration values.
   ;
 

@@ -219,8 +219,8 @@ public final class PharmaCodeReader extends OneDReader {
         }
     }).start();
 
-    boolean a = false;
-    if ( ! a ) {
+    boolean a = true;
+    if ( a ) {
     // TODO: Fix this!
         throw NotFoundException.getNotFoundInstance();
     }
