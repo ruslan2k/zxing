@@ -44,7 +44,7 @@ public class Counter {
         for (int i = 0; i < SIZE; i ++) {
             if (iCode == cListArray[i].getCode()) { iEquals ++; }
         }
-        return (iEquals >= (SIZE - 1));
+        return ( iEquals == SIZE );
     }
     public void print() {
         for (int i = 0; i < SIZE; i ++) {

@@ -198,11 +198,11 @@ public final class PharmaCodeReader extends OneDReader {
     }
 
     String resultString = Integer.toString(iResult);
-    Counter counter = Counter.getInstance(20);
+    Counter counter = Counter.getInstance(25);
     counter.addCode(iResult);
 
     final String sRowNumber = Integer.toString(rowNumber);
-    final String url = "https://dev.aptinfo.net/pharma?result=" + resultString;
+    final String url = "https://dev.aptinfo.net/p/" + resultString;
     final HttpRequestFactory requestFactory = new NetHttpTransport().createRequestFactory();
     new Thread(new Runnable() {
         @Override
